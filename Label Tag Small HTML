@@ -13,8 +13,7 @@ white-space: normal;
 			width: 1.5in;
 			padding: 0.05in;
 			min-height: 1in;
-			 
-		}
+	}
 	}
  .os-label_tag {
     font-family: Helvetica;
