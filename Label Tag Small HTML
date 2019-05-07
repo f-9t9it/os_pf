@@ -50,11 +50,11 @@ padding-top: 0.1em;
 				jsbarcode-width="1"
 				jsbarcode-fontsize="9"
 				jsbarcode-flat="true"
-				jsbarcode-value="{{ item.item_code }}"/>
+				jsbarcode-value="{{ item.batch_no or item.item_code }}"/>
 
 <div class="os-label_tag-title">{{ item.brand or '' }} </div>
 <div class="os-label_tag-subtitle">{{ item.item_name }} </div>
-<div class="os-label_tag-headline">{{ item.get_formatted('rate', doc) }}</div>
+<div class="os-label_tag-headline">BD. {{ '%0.3f'|format (frappe.db.get_value("Item Price", {"item_code": item.item_code, "price_list": "Standard Selling"}, "price_list_rate" )|float) }}</div>
 <p class=footer> </p> 
 {%- endfor -%}
 {%- endfor -%}
