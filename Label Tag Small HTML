@@ -1,0 +1,58 @@
+<style id=label>
+	.print-format table, .print-format tr, 
+	.print-format td, .print-format div, .print-format p {
+		font-family: serif;
+		line-height: 100%;
+		vertical-align: middle;
+white-space: nowrap;
+		overflow: hidden;
+		width: 100%;
+	}
+	@media screen {
+		.print-format {
+			width: 1.5in;
+			padding: 0.05in;
+			min-height: 1in;
+			 
+		}
+	}
+ .os-label_tag {
+    font-family: monospace;
+    font-size: 8pt;
+    color: #000000;
+  }
+  .os-label_tag-title {
+    font-weight: bold;
+  }
+  .os-label_tag-subtitle {
+    font-size: 0.8em;
+  }
+  .os-label_tag-headline {
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+</style>
+
+  {%- for item in doc.items -%}
+		{%- for qty in range (frappe.utils.cint(item.qty)) -%}
+<p class="text-center" style="font-size:9px">
+<svg class="barcode"
+				jsbarcode-margin="0"
+				jsbarcode-margintop="0"
+				jsbarcode-marginbottom="1"
+				jsbarcode-height="25"
+				jsbarcode-width="1"
+				jsbarcode-fontsize="12"
+				jsbarcode-flat="true"
+				jsbarcode-value="{{ item.item_code }}"/></br></p>
+<p class="text-left" style="font-size:9px">
+<div class="os-label_tag-title">{{ item.brand or '' }} </div>
+<div class="os-label_tag-subtitle">{{ item.item_name }} </div>
+<div class="os-label_tag-headline">{{ item.get_formatted('rate', doc) }}</div>
+<p class=footer> </p> 
+{%- endfor -%}
+{%- endfor -%}
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.9.0/dist/JsBarcode.all.min.js"></script>
+<script>
+JsBarcode(".barcode").init();
+</script>
