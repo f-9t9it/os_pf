@@ -1,0 +1,90 @@
+<style id=label>
+
+@media screen {
+		.print-format {
+			width: 78mm;
+			padding: 0.05in;
+			min-height: 34mm;
+}
+
+}
+ .os-label_tag {
+    height: 34mm;
+    width: 78mm;
+    font-family: arial;
+    font-size: 9pt;
+    color: #000000;
+    position: relative;
+white-space: normal;
+	overflow: hidden;
+word-break: break-word;
+	
+  }
+  .os-label_tag-headline, .os-label_tag-description {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 35mm;
+    padding: 2pt;
+  }
+  .os-label_tag-headline {
+    right: 17mm;
+    height: 13mm;
+    transform-origin: right top;
+    transform: rotate(-90deg) translateY(-12mm);
+  }
+  .os-label_tag-headline > .barcode {
+    width: 100%;
+  }
+  .os-label_tag-headline-text {
+    font-weight: bold;
+    padding: 0 2pt;
+  }
+  .os-label_tag-description {
+    right: 0;
+    height: 12mm;
+    transform-origin: left top;
+    transform: rotate(90deg) translateY(-34mm);
+  }
+  .os-label_tag-description-title {
+    font-weight: bold;
+  }
+  .os-label_tag-description-subtitle {
+    font-size: 0.7em;
+white-space: normal;
+word-break: break-word;
+  }
+
+</style>
+
+<main>
+  {%- for item in doc.items -%}{%- for tag in range(0, frappe.utils.cint(item.qty)) -%}
+  <div class="os-label_tag">
+    <div class="os-label_tag-headline">
+      <canvas
+        class="barcode"
+        jsbarcode-format="CODE128"
+        jsbarcode-value="{{ item.barcode or item.item_code }}"
+        jsbarcode-textmargin="0"
+        jsbarcode-height="32"
+        jsbarcode-margin="4"
+      ></canvas>
+      <div class="os-label_tag-headline-text">
+       BD. {{ '%0.3f'|format (frappe.db.get_value("Item Price", {"item_code": item.item_code, "price_list": "Standard Selling"}, "price_list_rate" )|float) }}
+      </div>
+    </div>
+    <div class="os-label_tag-description">
+      <div class="os-label_tag-description-title">{{ item.brand or '' }}</div>
+      <div class="os-label_tag-description-subtitle">{{ item.item_name }}</div>
+    </div>
+  </div><p class=footer> </p> 
+  {%- endfor -%}{%- endfor -%}
+</main>
+
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.code128.min.js"
+></script>
+<script type="text/javascript">
+  JsBarcode('.barcode').init();
+</script>
