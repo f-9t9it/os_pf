@@ -13,7 +13,7 @@
 <table class="table table-condensed table-hover table-bordered">
 	<tr>
 		<th style="width:20%"><b>To:<b></th>
-		<td style="width:40%">{{ doc.supplier_name }}</td>
+		<td style="width:40%"><b>{{ doc.supplier_name }}</b></td>
 		<th style="width:20%"><b>Order No.</b></th>
 		<td style="width:20%">{{ doc.name }}</td>
 	</tr>
@@ -27,7 +27,7 @@
 
 <tr>
 		<th ><b>Deliver To:<b></th>
-		<td >{{ doc.shipping_address_display or ''}}</td>
+		<td > <b>{{ doc.shipping_address or '' }}</b><br>{{ doc.shipping_address_display or ''}}</td>
 		<th ><b>Ref. No.<b></th>
 		<td >  </td>
 		
