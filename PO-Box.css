@@ -1,0 +1,27 @@
+@media print {
+  footer {page-break-after: always;}
+}
+.column {
+  float: left;
+  width: 50%;
+ padding-left: 50px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.column2 {
+  float: left;
+  width: 50%;
+ padding-left: 50px;
+}
+
+/* Clear floats after the columns */
+.row2:after {
+  content: "";
+  display: table;
+  clear: both;
+}
