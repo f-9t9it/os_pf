@@ -1,0 +1,161 @@
+{%- from "templates/print_formats/standard_macros.html" import add_header -%}
+<div id="header-html">
+{% if doc.letter_head %}
+	<div class="letter-head" style="margin-top: -10px !important;">
+		{{ frappe.render_template(frappe.db.get_value("Letter Head", doc.letter_head, "content"), {"doc": doc}) }}
+	
+{% endif %}
+</div>
+<div class= "text-center">
+<h2>{{ _("Purchase Order") }}</h2>
+</div>
+
+<table class="table table-condensed table-hover table-bordered">
+	<tr>
+		<th style="width:20%"><b>To:<b></th>
+		<td style="width:40%">{{ doc.supplier_name }}</td>
+		<th style="width:20%"><b>Order No.</b></th>
+		<td style="width:20%">{{ doc.name }}</td>
+	</tr>
+	<tr>
+		<th ><b><b></th>
+		<td ></td>
+		<th ><b>Date<b></th>
+		<td > {{ doc.get_formatted("transaction_date") }} </td>
+		
+	</tr>
+
+<tr>
+		<th ><b>Deliver To:<b></th>
+		<td >{{ doc.shipping_address_display or ''}}</td>
+		<th ><b>Ref. No.<b></th>
+		<td >  </td>
+		
+	</tr>
+</table>
+</div>
+Dear Sir, We are pleased to confirm out purchase order for the following items as per the description and terms mentioned.
+<table class="table table-condensed table-hover table-bordered">
+
+  <tbody>
+
+    <tr>
+
+      <th>Sr</th>
+
+      <th>Description</th>
+      <th>UOM</th> 
+      <th class="text-right">Qty</th>
+
+      <th class="text-right">Rate</th>
+
+      <th class="text-right">Amount</th>
+
+    </tr>
+
+    {%- for row in doc.items -%}
+
+
+    <tr>
+
+      <td style="width: 3%;">{{ row.idx }}</td>
+     <td style="width: 50%;">{{ row.description}}    </td>
+      <td style="width: 8%; text-align: right;">{{ row.uom }} </td>
+      <td style="width: 8%; text-align: right;">{{ row.qty }} </td>
+      <td style="width: 11%; text-align: right;">{{ row.get_formatted("rate", doc) }}</td>
+      <td style="width: 11%; text-align: right;">{{ row.get_formatted("amount", doc) }}</td>
+    </tr>
+
+    {%- endfor -%}
+
+    
+
+    <tr>
+
+         <td colspan="4"><b></b> </td>
+<td style="text-align: right;"><b>{{ _("Total") }}</b> </td>
+         <td style="width: 8%; text-align: right;"><b>{{ doc.get_formatted("total") or '' }} </b></td>
+
+    </tr>
+{%- if doc.discount_amount -%}
+    <tr>
+
+         <td colspan="4"><b></b> </td>
+<td style="text-align: right;"><b>{{ _("Discount") }}</b> </td>
+         <td style="width: 8%; text-align: right;"><b>{{ doc.get_formatted("discount_amount") or '' }} </b></td>
+
+    </tr>
+
+    <tr>
+ <td colspan="4"><b></b> </td>
+         <td style="text-align: right;"><b>{{ _("Net Total") }}</b> </td>
+
+         <td style="width: 8%; text-align: right;"><b>{{ doc.get_formatted("net_total") or '' }} </b></td>
+
+    </tr>
+    
+    
+
+ {%- endif -%}
+
+
+{%- if doc.base_total_taxes_and_charges -%}
+
+        <tr>
+<td style="text-align: right;" colspan="4"> </td>
+         <td style="text-align: right;"><b>VAT </b> </td>
+
+         <td style="width: 8%; text-align: right;"><b>{{ doc.get_formatted("base_total_taxes_and_charges") or '' }} </b></td>
+
+    </tr>
+
+      
+    
+
+ {%- endif -%}
+ 
+    
+    
+    <tr>
+         <td colspan="3"><b>{{ _("Total : ") }}{{ doc.in_words or '' }}</b> </td>
+<td colspan="2" style="text-align: right;" ><b>Grand Total</b></td>
+         <td style="width: 15%; text-align: right;"><b>{{ doc.get_formatted("grand_total") or '' }} </b></td>
+
+    </tr>
+
+  </tbody>
+
+</table>
+
+
+
+<div class="row">
+
+ <div class="col-xs-12 text-left"><big>{{ doc.terms or '' }}</big></div>
+
+</div>
+
+</small>
+
+<div class="row">
+  <div id="footer-html" class="visible-pdf">
+  <div class="row">
+<div class="column">------------------------------<br> Prepared By</div>
+  <div class="column">------------------------------<br> Approved By.</div>
+</div><br>
+<div class="row2">
+<div class="column2">NOTE: All Payment XXXXXYZYXYXYZYXYZXYXY</div>
+  <div class="column2">Printed On: {{ frappe.utils.now_datetime().strftime('%d-%-m-%Y %I:%M:%S %p') }}</div>
+</div>
+
+
+    {% if not no_letterhead and footer %}
+    <div class="letter-head-footer">
+      {{ footer }}
+    </div>
+    {% endif %}
+    <p class="text-center small page-number visible-pdf">
+      {{ _("Page {0} of {1}").format('<span class="page"></span>', '<span class="topage"></span>') }}
+    </p>
+  </div>
+</div>
