@@ -18,7 +18,7 @@
 <p class="text-center">
 <b>TAX INVOICE</b><br>
 <b>{{ company }}</b><br>
-ADRESS HERE<br>
+ADDRESS HERE<br>
 <b>Phone No.: +973 - XXXXX<br>
 VAT ID: XXXXXXX </b>
 </p>
