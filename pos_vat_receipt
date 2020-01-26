@@ -1,0 +1,107 @@
+<style>
+	.print-format table, .print-format tr, 
+	.print-format td, .print-format div, .print-format p {
+		font-family: arial;
+		line-height: 100%;
+		vertical-align: middle;
+	}
+	@media screen {
+		.print-format {
+			width: 4in;
+			padding: 0.15in;
+			min-height: 5in;
+	
+		}
+	}
+</style>
+
+<p class="text-center">
+<b>TAX INVOICE</b><br>
+<b>{{ company }}</b><br>
+ADRESS HERE<br>
+<b>Phone No.: +973 - XXXXX<br>
+VAT ID: XXXXXXX </b>
+</p>
+<p><b>{{  __("Bill No.") }}:</b> {{ offline_pos_name }}<br>
+	<b>{{ __("Customer") }}:</b> {{ customer }}<br>
+	<b>{{ __("Date") }}:</b> {{ frappe.datetime.str_to_user(posting_date) }} : {{ posting_time }}<br>
+</p>
+<table class="table table-condensed cart no-border" style="margin-top: 0px !important;">
+	<thead style="font-size:10px> 
+		<tr style="font-size:10px>
+			<th width="40%">{{ __("Item") }}</b></th>
+			<th width="15%" class="text-right">{{ __("Qty") }}</th>
+			<th width="15%" class="text-right">{{ __("Net Total") }}</th>
+			<th width="15%" class="text-right">{{ __("VAT Amt") }}</th>
+			<th width="15%" class="text-right">{{ __("Total") }}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for item in items %}
+		<tr>
+			<td style="font-size:9px">
+				{{ item.item_name }} - VAT@{{ item.item_tax_rate ? (JSON.parse(item.item_tax_rate)[`VAT - IHP`] || 0) : 0 }}%
+			</td>
+			<td class="text-right" style="font-size:9px">{{ item.qty }}<br>@ {{ item.rate }}</td>
+			<td class="text-right" style="font-size:9px">{{ format_currency (item.amount) }}</td>
+
+			<td class="text-right" style="font-size:9px">{{  format_currency (item.qty * item.rate * (item.item_tax_rate ? (JSON.parse(item.item_tax_rate)[`VAT - IHP`] || 0) : 0)/100) }} </td>
+			
+
+<td class="text-right" style="font-size:9px">{{ format_currency ( (item.rate * item.qty) + (item.qty * item.rate * (item.item_tax_rate ? (JSON.parse(item.item_tax_rate)[`VAT - IHP`] || 0) : 0)/100), currency, 3) }} </td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<table class="table table-condensed no-border">
+	<tbody>
+		<tr>
+			<td class="text-right" style="width: 60%">
+				<b>{{ __("Net Total") }}</b><br>
+
+<b>{{ __("VAT") }}</b><br>
+<b>{{ __("Grand Total") }}</b><br>
+<b>{{ __("Paid Amount") }}</b><br>
+<b>{{ __("Change Amount") }}</b><br>
+<b>{{ __("Payment") }}</b><br>
+{% for row in payments %}
+
+{{ row.mode_of_payment }} <br>
+
+{% endfor %}<br>
+			</td>
+			<td class="text-right">
+				<b>{{ format_currency(total, currency) }}</b><br>
+{% for row in taxes %}
+		{% if not row.included_in_print_rate %}
+
+<b>{{ format_currency(row.tax_amount, currency) }}</b><br>
+
+{% endif %}
+		{% endfor %}
+
+<b>{{ format_currency(grand_total, currency) }}</b>	<br>
+			<b>{{ format_currency(paid_amount, currency) }}</b>	<br>
+<b>{{ format_currency(change_amount, currency) }}</b>
+<br><br>
+{% for row in payments %}
+
+{{  format_currency(row.amount, currency)}}<br>
+
+{% endfor %}<br>
+			</td>
+		</tr>
+		{% if discount_amount %}
+		<tr>
+			<td class="text-right" style="width: 40%">
+				<b>{{ __("Discount") }}</b>
+			</td>
+			<td class="text-right">
+				<b>{{ format_currency(discount_amount, currency) }}</b>
+			</td>
+		</tr>
+{% endif %}
+
+	</tbody>
+</table>
+<p class="text-center" style="margin-top: -30px !important;"><img src="{{ pos_name_barcode_uri }}" /></br><b>{{ __("Please keep the receipt for any exchange within 24Hrs. Exchange baby milk and fridge items not allowed") }}</b></p>
